@@ -123,4 +123,28 @@ def decade_label(year: int) -> str:
             return "недавние"
         case _:
             return "старые"
-            
+
+print('Названия всех фильмов, которые НЕ относятся к жанру "comedy":')
+for movie in movies:
+    if movie['genres'].issuperset({'comedy'}):
+        continue
+    print(f'- {movie['title']}')
+
+index = 0
+while index < len(movies) - 1:    
+    if movies[index]['rating'] > 9.0:
+        print('Первый по порядку в списке фильм с рейтингом выше 9.0:', end = ' ')
+        print(f'{movies[index]['title']}')
+        break
+    index += 1
+else:
+    print("Шедевров не найдено")
+
+
+def count_long_movies(movies, threshold=120):
+    count = 0
+    for movie in movies:
+        if movie['duration_min'] > threshold:
+            count += 1
+
+    return count
