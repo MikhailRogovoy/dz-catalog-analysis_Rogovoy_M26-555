@@ -104,3 +104,23 @@ def catalog_age_stats(movies, current_year=2026) -> tuple[int, int, int]:
 
 def duration_in_hours(minutes) -> str:
     return f"{minutes // 60}ч {minutes % 60}мин"
+
+
+def rating_tier(rating: float) -> str:
+    if rating >= 7:
+        return 'Шедевр' if rating >= 9 else 'Хорошо'
+    elif 5 <= rating < 7:
+        return 'Средне'
+    else:
+        return 'Слабо'    
+
+
+def decade_label(year: int) -> str:
+    match year:
+        case _ if year > 2020:
+            return "новые"
+        case _ if year >= 2015 and year <= 2020:
+            return "недавние"
+        case _:
+            return "старые"
+            
