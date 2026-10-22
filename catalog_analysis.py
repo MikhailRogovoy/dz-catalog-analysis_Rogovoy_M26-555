@@ -222,3 +222,27 @@ def above_average_films(movies):
     avg_rat = average_rating(movies)
     result = {m["title"]: m['rating'] for m in movies if movie['rating'] > avg_rat}
     return result
+
+
+def all_genres(movies):
+    genres = set()
+    for movie in movies:
+        genres = genres | movie['genres']
+
+    return genres
+
+
+def common_actors(movie1, movie2):
+    return set(movie1['actors']) & set(movie2['actors'])
+
+
+def genres_only_in_one(movies_a, movies_b):
+    movies_a_genres = set()
+    movies_b_genres = set()
+    for movie_from_a in movies_a:
+        movies_a_genres = movies_a_genres | movie_from_a['genres']
+    for movie_from_b in movies_b:
+        movies_b_genres = movies_b_genres | movie_from_b['genres']
+    return movies_a_genres - movies_b_genres
+
+print(genres_only_in_one(movies[5:6], movies[:3]))
