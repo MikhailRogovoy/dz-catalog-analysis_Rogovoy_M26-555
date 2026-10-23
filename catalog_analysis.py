@@ -84,7 +84,7 @@ movies = [
 ]
 
 # Этап 1.
-# Средняя оценку по каталогу
+# Средняя оценка рейтинга по каталогу
 def average_rating(movies) -> float:
     ratings = []
     for movie in movies:
@@ -181,7 +181,7 @@ def make_slug(title):
 
 #Создание единой строки с описанием фильма
 def format_report_line(movie):
-    m_title = movie['title']
+    m_title = normalize_title(movie['title'])
     m_year = movie['year']
     m_rating = movie['rating']
     m_dur = duration_in_hours(movie['duration_min'])
@@ -280,5 +280,27 @@ def demo_iter_high_rated(movies, min_rating=8.0):
 def sum_durations(movies, min_rating=7.0):
     return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
 
-demo_first_movie(movies)
-demo_non_comedy(movies)
+"""
+Этап 9
+Функция, которая объединяет результаты всех 
+предыдущих этапов в единый консольный отчет
+"""
+def build_report(movies):
+    print('ОТЧЕТ ПО КАТАЛОГУ')
+    print(f'Средний рейтинг: {average_rating(movies)}')
+    print(f'Средний возраст фильмов: {catalog_age_stats(movies)[2]} лет')
+
+    print('\nТоп-3 фильма:')    
+    top_3_titles = [title[0] for title in top_n_by_rating(movies, n=3)]
+    for movie in movies:
+        if movie['title'] in top_3_titles:
+            print('\t', '\n'.join(list(map(format_report_line, [movie]))))
+
+    print('\nФильмов по жанрам:')
+    for genre, count in sorted(count_by_genre(movies).items(), 
+                               key=lambda item: item[1], reverse=True):
+        print('\t' + genre + ' - ' + str(count))
+
+    print('\nВсе жанры каталога:', ', '.join(sorted(all_genres(movies))))
+
+build_report(movies)
