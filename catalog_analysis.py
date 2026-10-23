@@ -83,7 +83,8 @@ movies = [
     },
 ]
 
-
+# Этап 1.
+# Средняя оценку по каталогу
 def average_rating(movies) -> float:
     ratings = []
     for movie in movies:
@@ -91,7 +92,7 @@ def average_rating(movies) -> float:
     avg_rating = round(sum(ratings) / len(ratings), 1)
     return avg_rating
 
-
+# Статистика по году производства фильма
 def catalog_age_stats(movies, current_year=2026) -> tuple[int, int, int]:
     ages = []
     for movie in movies:
@@ -101,11 +102,12 @@ def catalog_age_stats(movies, current_year=2026) -> tuple[int, int, int]:
     avg_age = math.ceil(sum(ages) / len(ages))
     return (min_age, max_age, avg_age)
 
-
+# Перевод длительности в мин в (Хч Хмин)
 def duration_in_hours(minutes) -> str:
     return f"{minutes // 60}ч {minutes % 60}мин"
 
-
+# Этап 2.
+# Оценка фильма по рейтингу
 def rating_tier(rating: float) -> str:
     if rating >= 7:
         return 'Шедевр' if rating >= 9 else 'Хорошо'
@@ -114,7 +116,7 @@ def rating_tier(rating: float) -> str:
     else:
         return 'Слабо'    
 
-
+# Оценка фильма по году
 def decade_label(year: int) -> str:
     match year:
         case _ if year > 2020:
@@ -124,23 +126,28 @@ def decade_label(year: int) -> str:
         case _:
             return "старые"
 
-print('Названия всех фильмов, которые НЕ относятся к жанру "comedy":')
-for movie in movies:
-    if movie['genres'].issuperset({'comedy'}):
-        continue
-    print(f'- {movie['title']}')
+# Этап 3.
+# Демонстрация работы цикла for. Поиск фильмов которые НЕ относятся к жанру "comedy"
+def demo_non_comedy(movies):
+    print('Названия всех фильмов, которые НЕ относятся к жанру "comedy":')
+    for movie in movies:
+        if movie['genres'].issuperset({'comedy'}):
+            continue
+        print(f'- {movie['title']}')
 
-index = 0
-while index < len(movies) - 1:    
-    if movies[index]['rating'] > 9.0:
-        print('Первый по порядку в списке фильм с рейтингом выше 9.0:', end = ' ')
-        print(f'{movies[index]['title']}')
-        break
-    index += 1
-else:
-    print("Шедевров не найдено")
+# Демонстрация работы цикла while. Поиск первого фильма с рейтингом выше 9.0
+def demo_first_movie(movies):
+    index = 0
+    while index < len(movies) - 1:    
+        if movies[index]['rating'] > 9.0:
+            print('Первый по порядку в списке фильм с рейтингом выше 9.0:', end = ' ')
+            print(f'{movies[index]['title']}')
+            break
+        index += 1
+    else:
+        print("Шедевров не найдено")
 
-
+#Подсчет количества фильмов длиннее заданного порога минут
 def count_long_movies(movies, threshold=120):
     count = 0
     for movie in movies:
@@ -149,7 +156,8 @@ def count_long_movies(movies, threshold=120):
 
     return count
 
-
+# Этап 4.
+# Приведение строки к формату Title Case
 def normalize_title(title):
     title = title.strip()
     if len(title) == 0:
@@ -160,7 +168,7 @@ def normalize_title(title):
         new_words.append(word[0].upper() + word[1:])
     return ' '.join(new_words)
 
-
+# Превращение нормализованного названия в «слаг»
 def make_slug(title):
     title = title.strip()
     if len(title) == 0:
@@ -171,6 +179,7 @@ def make_slug(title):
         new_words.append(word[0].lower() + word[1:])
     return '-'.join(new_words)
 
+#Создание единой строки с описанием фильма
 def format_report_line(movie):
     m_title = movie['title']
     m_year = movie['year']
@@ -179,7 +188,8 @@ def format_report_line(movie):
     m_genres = ', '.join([genre for genre in sorted(movie['genres'])])
     return f'"{m_title}" ({m_year}) - {m_rating}/10, {m_dur}, жанры: {m_genres}'
 
-
+# Этап 5
+# Сортировка по убыванию рейтинга
 def titles_sorted_by_rating(movies):
     new_movies = movies.copy()
     sorted_movies = sorted(new_movies, key=lambda movie: movie['rating'], reverse=True)
@@ -188,10 +198,12 @@ def titles_sorted_by_rating(movies):
         result.append((m['title'], m['rating']))
     return result
 
+# Вывод по топу рейтинга
 def top_n_by_rating(movies, n=3):
     return titles_sorted_by_rating(movies)[:n]
 
-
+# Этап 6
+# Статистика по жанрам
 def count_by_genre(movies):
     genres_count = {}
     for movie in movies:
@@ -204,7 +216,7 @@ def count_by_genre(movies):
 
     return genres_count
 
-
+# Фильмография актеров
 def actor_filmography(movies):
     actor_movies = {}
     for movie in movies:
@@ -217,24 +229,25 @@ def actor_filmography(movies):
 
     return actor_movies
 
-
+# Фильмы с рейтингом выше среднего
 def above_average_films(movies):
     avg_rat = average_rating(movies)
-    result = {m["title"]: m['rating'] for m in movies if movie['rating'] > avg_rat}
+    result = {m["title"]: m['rating'] for m in movies if m['rating'] > avg_rat}
     return result
 
-
+# Этап 7
+# Множество всех уникальных жанров каталога
 def all_genres(movies):
     genres = set()
     for movie in movies:
         genres = genres | movie['genres']
     return genres
 
-
+# Множество актеров, снимавшихся в обоих фильмах
 def common_actors(movie1, movie2):
     return set(movie1['actors']) & set(movie2['actors'])
 
-
+# Жанры, встречающиеся в movies_a, но не встречающиеся в movies_b
 def genres_only_in_one(movies_a, movies_b):
     movies_a_genres = set()
     movies_b_genres = set()
@@ -244,18 +257,28 @@ def genres_only_in_one(movies_a, movies_b):
         movies_b_genres = movies_b_genres | movie_from_b['genres']
     return movies_a_genres - movies_b_genres
 
-
+"""
+Этап 8
+Функция-генератор, которая лениво отдает 
+фильмы с рейтингом не ниже min_rating
+"""
 def iter_high_rated(movies, min_rating=8.0):
     for movie in movies:
         if movie['rating'] < min_rating:
             continue
         yield movie
 
+# Демонстрация работы функции
 def demo_iter_high_rated(movies, min_rating=8.0):
     for movie in iter_high_rated(movies, min_rating):
         print(format_report_line(movie))
 
+"""
+Генераторное выражение, которое считает суммарную 
+длительность всех фильмов с рейтингом выше 7 в минутах
+"""
 def sum_durations(movies, min_rating=7.0):
     return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
 
-print(sum_durations(movies))
+demo_first_movie(movies)
+demo_non_comedy(movies)
